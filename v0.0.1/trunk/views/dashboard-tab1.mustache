@@ -1,0 +1,227 @@
+<h2 class="flow-text">Current Status & Points</h2>
+    <hr>
+    <p>Below is the summary of your current security status and the last attempts to break in/exploit your site in the last 24 hours.</p>
+    <div class="row">
+
+      <div class="col s4 dashgraph"><!-- GRAPH1 -->
+        	<h3 class="flow-text"> {{graph_one_title}} </h3>
+            <canvas id="pointChart"></canvas>
+                <script type='text/javascript'>
+                    var data = [
+                        {
+                            value: 100,
+                            color:"#F7464A",
+                            highlight: "#FF5A5E",
+                            label: "Minimum Security Level"
+                        },
+                        {
+                            value: 350,
+                            color: "#46BFBD",
+                            highlight: "#5AD3D1",
+                            label: "Recommended Security Level"
+                        },
+                        {
+                            value: 300,
+                            color: "#FDB45C",
+                            highlight: "#FFC870",
+                            label: "Average Security Level"
+                        },
+                        {
+                            value: {{ total_security_points_achievable }},
+                            color: "#949FB1",
+                            highlight: "#A8B3C5",
+                            label: "Current Maximum Security Level"
+                        },
+                        {
+                            value: {{ total_site_security_points }},
+                            color: "#4D5360",
+                            highlight: "#616774",
+                            label: "Your Current Security Level"
+                        }
+
+                    ];
+                    var pointChart = document.getElementById("pointChart").getContext("2d");
+                    new Chart(pointChart).PolarArea(data, pointChartOptions);
+                </script>    
+  
+      </div><!-- GRAPH1 -->
+      <div class="col s4 dashgraph"><!-- GRAPH2 -->
+        <h3 class="flow-text">{{ graph_two_title }}</h3>      
+            	<canvas id="myChart"></canvas>
+
+            	<script type='text/javascript'>
+                	// Get the context of the canvas element we want to select
+                	var ctx = document.getElementById("myChart").getContext("2d");
+
+                	var data = [
+                		{{# active_features }}
+                			{
+                			value: {{ points }},
+                			color: "{{ color }}",
+                			highlight: "{{ highlight }}",
+                			label: "{{ feature_name }}"
+                			}{{#comma}},{{/comma}}
+                		{{/ active_features }}
+                	]
+
+   
+                	new Chart(ctx).Pie(data,pointBreakdownOptions);
+            	</script>
+      </div><!-- GRAPH2 -->
+      <div class="col s4 dashgraph"><!-- GRAPH3 -->
+      	<h3 class="flow-text">Last attempts</h3>   
+        	<canvas id="lastAttempts"></canvas>
+
+            	<script type='text/javascript'>
+                	// Get the context of the canvas element we want to select
+                	var ctx = document.getElementById("lastAttempts").getContext("2d");
+
+                	var data = {
+				    labels: ["Brute-Force", "Scans", "Failed Login", "XSS", "SQLi", "Ddos", "CSRF"],
+				    datasets: [
+				        {
+				            label: "My First dataset",
+				            fillColor: "rgba(220,220,220,0.2)",
+				            strokeColor: "rgba(220,220,220,1)",
+				            pointColor: "rgba(220,220,220,1)",
+				            pointStrokeColor: "#fff",
+				            pointHighlightFill: "#fff",
+				            pointHighlightStroke: "rgba(220,220,220,1)",
+				            data: [65, 59, 90, 81, 56, 55, 40]
+				        },
+				        {
+				            label: "My Second dataset",
+				            fillColor: "rgba(151,187,205,0.2)",
+				            strokeColor: "rgba(151,187,205,1)",
+				            pointColor: "rgba(151,187,205,1)",
+				            pointStrokeColor: "#fff",
+				            pointHighlightFill: "#fff",
+				            pointHighlightStroke: "rgba(151,187,205,1)",
+				            data: [28, 48, 40, 19, 96, 27, 100]
+				        }
+				    ]
+				};
+
+
+   
+                	var myRadarChart = new Chart(ctx).Radar(data, lastAttemptOptions);
+
+            	</script>
+      </div><!-- GRAPH3 -->
+
+      <div class="col s12">
+			<p class="flow-text" id="rankingInfo">
+                    Total Achievable Points: {{ total_security_points_achievable }} <br>
+             		<span id="currentSecurityPoints">Current Score: {{ total_site_security_points }} </span>
+            </p>
+      </div>
+
+    </div>
+
+    <h2 class="flow-text">Quick Actions</h2>
+    <hr>
+    <p>Below are some quick actions that you can carry out, such as backing up important config files and enabling firewall/maintenance modes</p>
+
+	<!-- Quick Links -->
+    <div class="row">
+      <div class="col s4"><a class="btn" onclick="Materialize.toast('Database Backed Up', 4000)">Backup Your Database</a></div>
+      <div class="col s4"><a class="btn" onclick="Materialize.toast('Maintenance mode enabled', 4000)">Enable Maintenance Mode</a></div>
+      <div class="col s4"><a class="btn red" onclick="Materialize.toast('Firewall Disabled', 4000)">Temporarily Disable Firewall</a></div>
+	</div>
+    <div class="row">
+      <div class="col s4"><a class="btn red" onclick="Materialize.toast('WPSec Temporarily Disabled', 4000)">Temporarily Disable This Plugin</a></div>
+      <div class="col s4"><a class="btn" onclick="Materialize.toast('.htaccess backed up', 4000)">Backup .htaccess</a></div>
+      <div class="col s4"><a class="btn" onclick="Materialize.toast('wp-config.php backed up', 4000)">Backup wp-config.php</a></div>
+    </div>
+          
+        
+			<h2 class="flow-text">{{ widget_one }}</h2>
+			<hr>
+			<p>{{ widget_one_info }}</p>
+			<div class="col s12">
+        	<ul class="collapsible popout" data-collapsible="accordion">
+			    <li>
+			      <div class="collapsible-header">{{username_admin_widget_title}}</div>
+			      <div class="collapsible-body">
+
+					    <blockquote>
+					      {{username_admin_widget_title}} is currently on
+					    </blockquote>
+          
+			      		<p>
+						<a href="admin.php?page={{ username_admin_menu }}">
+	                    	<div class="{{ username_admin_feature_on_class }}">On</div>
+            				<div class="{{ username_admin_feature_off_class }}">Off</div>
+                    	</a>
+                    	</p>
+                    	<div class="wpsec_clear_float"></div>
+			      </div>
+			    </li>
+			    <li>
+			      <div class="collapsible-header">{{ login_lockdown_widget_title }}</div>
+			      <div class="collapsible-body">
+						<p>{{ login_lockdown_widget_title }} is currently on
+						<a href="admin.php?page={{ login_lockdown_menu }}">
+	                    	<div class="{{ login_lockdown_feature_on_class }}">On</div>
+            					<div class="{{ login_lockdown_feature_off_class }}">Off</div>
+                    	</a>
+                    	</p>
+                    	<div class="wpsec_clear_float"></div>
+			      </div>
+			    </li>
+			    <li>
+			      <div class="collapsible-header">{{ filesystem_widget_title }}</div>
+			      <div class="collapsible-body">
+						<p>{{ filesystem_widget_title }} is currently on
+						<a href="admin.php?page={{ filesystem_menu }}">
+	                    	<div class="{{ filesystem_feature_on_class }}">On</div>
+            					<div class="{{ filesystem_feature_off_class }}">Off</div>
+                    	</a>
+                    	</p>
+                    	<div class="wpsec_clear_float"></div>
+			      </div>
+			    </li>
+			    <li>
+			      <div class="collapsible-header">{{ basic_firewall_widget_title }}</div>
+			      <div class="collapsible-body">
+						<p>{{ basic_firewall_widget_title }} is currently on
+						<a href="admin.php?page={{ basic_firewall_menu }}">
+	                    	<div class="{{ basic_firewall_feature_on_class }}">On</div>
+            					<div class="{{ basic_firewall_feature_off_class }}">Off</div>
+                    	</a>
+                    	</p>
+                    	<div class="wpsec_clear_float"></div>
+			      </div>
+			    </li>
+			  </ul>
+			</div>
+
+<h2 class="flow-text">{{ login_summary_title }}</h2>
+<hr>
+<p>Below is a list of 5 of the most recent logins to your site</p>
+
+ <div class="row">
+
+      <div class="col s12 dashgraph"><!-- GRAPH1 -->
+        <table>
+        <thead>
+          <tr>
+              <th data-field="id">User</th>
+              <th data-field="name">Date</th>
+              <th data-field="price">IP</th>
+          </tr>
+        </thead>
+
+        <tbody>
+        	{{# login_summary }}
+          <tr>
+            <td>{{ name }}</td>
+            <td>{{ date }}</td>
+            <td>{{ ip }}</td>
+          </tr>
+          {{/ login_summary }}
+        </tbody>
+      </table>
+
+</div>
+</div>
